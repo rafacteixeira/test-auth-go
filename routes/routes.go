@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"test-auth/constants"
 	controller "test-auth/controllers"
 	"test-auth/middlewares"
 
@@ -9,7 +10,7 @@ import (
 
 func HandleRequests() {
 	r := gin.Default()
-	r.Use(middlewares.Auth0Middleware())
-	r.GET("/test", middlewares.IsAdminMiddleware(), controller.TestController)
+	r.Use(middlewares.Auth())
+	r.GET("/test", middlewares.HasRole(constants.AdminRole), controller.TestController)
 	r.Run()
 }

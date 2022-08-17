@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -9,13 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func IsAdminMiddleware() gin.HandlerFunc {
+// HasRole is a middleware that validates if the token contains the expected role in its claims
+func HasRole(role string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
 		claims := token.CustomClaims.(*CustomClaims)
-		if !claims.HasScope("admin") {
+		if !claims.hasScope(role) {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"message": "you must have admin role to access this endpoint",
+				"message": fmt.Sprintf("you must have %s role to access this endpoint", role),
 			})
 		} else {
 			c.Next()
@@ -24,7 +26,7 @@ func IsAdminMiddleware() gin.HandlerFunc {
 }
 
 // HasScope checks whether our claims have a specific scope.
-func (c CustomClaims) HasScope(expectedScope string) bool {
+func (c CustomClaims) hasScope(expectedScope string) bool {
 	result := strings.Split(c.Scope, " ")
 	for i := range result {
 		if result[i] == expectedScope {

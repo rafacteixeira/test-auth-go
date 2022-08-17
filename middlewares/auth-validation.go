@@ -26,7 +26,7 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 	return nil
 }
 
-func Auth0Middleware() gin.HandlerFunc {
+func Auth() gin.HandlerFunc {
 	issuerURL, err := url.Parse("https://" + os.Getenv("AUTH0_DOMAIN") + "/")
 	if err != nil {
 		log.Fatalf("Failed to parse the issuer url: %v", err)
