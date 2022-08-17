@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"net/url"
@@ -23,7 +24,13 @@ type CustomClaims struct {
 // Validate does nothing for this example, but we need
 // it to satisfy validator.CustomClaims interface.
 func (c CustomClaims) Validate(ctx context.Context) error {
-	return nil
+
+	var err error
+	if c.Scope != "admin" {
+		err = errors.New("you dont have admin acces")
+	}
+
+	return err
 }
 
 func Auth0Middleware() gin.HandlerFunc {
@@ -55,7 +62,7 @@ func Auth0Middleware() gin.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(`{"message":"Failed to validate JWT."}`))
+		w.Write([]byte(`{"message":"` + err.Error() + `"}`))
 	}
 
 	middleware := jwtmiddleware.New(
@@ -65,21 +72,3 @@ func Auth0Middleware() gin.HandlerFunc {
 
 	return adapter.Wrap(middleware.CheckJWT)
 }
-
-// func AuthorizeJWT() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		const BEARER_SCHEMA = "Bearer "
-// 		authHeader := c.GetHeader("Authorization")
-// 		tokenString := authHeader[len(BEARER_SCHEMA):]
-// 		token, err := service.JWTAuthService().ValidateToken(tokenString)
-
-// 		if token.Valid {
-// 			claims := token.Claims.(jwt.MapClaims)
-// 			fmt.Println(claims)
-// 			c.Next()
-// 		} else {
-// 			fmt.Println(err.Error())
-// 			c.AbortWithStatus(http.StatusUnauthorized)
-// 		}
-// 	}
-// }

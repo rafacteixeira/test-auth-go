@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/gwatts/gin-adapter v1.0.0
 	github.com/joho/godotenv v1.4.0
 )
@@ -15,7 +14,6 @@ require (
 )
 
 require (
-	github.com/MicahParks/keyfunc v1.2.2
 	github.com/auth0/go-jwt-middleware/v2 v2.0.1
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
