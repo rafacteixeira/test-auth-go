@@ -49,3 +49,5 @@ go.work
 *.code-workspace
 
 .env
+
+.idea

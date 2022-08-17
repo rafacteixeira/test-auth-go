@@ -10,6 +10,6 @@ import (
 func HandleRequests() {
 	r := gin.Default()
 	r.Use(middlewares.Auth0Middleware())
-	r.GET("/test", controller.TestController)
+	r.GET("/test", middlewares.IsAdminMiddleware(), controller.TestController)
 	r.Run()
 }

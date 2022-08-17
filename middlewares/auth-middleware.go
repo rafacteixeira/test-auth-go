@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"context"
-	"errors"
 	"log"
 	"net/http"
 	"net/url"
@@ -24,13 +23,7 @@ type CustomClaims struct {
 // Validate does nothing for this example, but we need
 // it to satisfy validator.CustomClaims interface.
 func (c CustomClaims) Validate(ctx context.Context) error {
-
-	var err error
-	if c.Scope != "admin" {
-		err = errors.New("you dont have admin acces")
-	}
-
-	return err
+	return nil
 }
 
 func Auth0Middleware() gin.HandlerFunc {
